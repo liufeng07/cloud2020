@@ -22,6 +22,11 @@ eureka:
       #defaultZone: http://localhost:7001/eureka
       # 集群版
       defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+  # 实例id名称 防止显示时代入主机名称 每个人的电脑显示都一样
+  instance:
+    instance-id: payment8001
+    # 访问路径显示实例ip
+    prefer-ip-address: true
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
