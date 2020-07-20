@@ -36,6 +36,7 @@ public class PaymentController {
         return result;
     }
 
+    //###### 服务降级
     /**
      * 超时访问
      *
@@ -46,6 +47,19 @@ public class PaymentController {
     public String paymentInfo_TimeOut(@PathVariable("id") Integer id) {
         String result = paymentService.paymentInfo_TimeOut(id);
         log.info("*****result:" + result);
+        return result;
+    }
+
+    //###### 服务熔断
+    /**
+     * 服务熔断
+     * @param id
+     * @return
+     */
+    @GetMapping("/payment/circuit/{id}")
+    public String paymentCircuitBreaker(@PathVariable("id") Integer id) {
+        String result = paymentService.paymentCircuitBreaker(id);
+        log.info("***result:" + result);
         return result;
     }
 }
