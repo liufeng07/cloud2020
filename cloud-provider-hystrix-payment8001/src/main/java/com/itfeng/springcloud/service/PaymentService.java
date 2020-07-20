@@ -36,6 +36,7 @@ public class PaymentService {
     })
     public String paymentInfo_TimeOut(Integer id) {
         int timeNumber = 5;
+        //int age =10/0; 运行出错，直接到服务降级-兜底方法
         try {
             // 暂停5秒钟
             TimeUnit.SECONDS.sleep(timeNumber);
