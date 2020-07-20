@@ -1,5 +1,7 @@
 package com.itfeng.springcloud.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -21,14 +23,19 @@ public class PaymentService {
         return "线程池:" + Thread.currentThread().getName() + " paymentInfo_OK,id:" + id + "\t" + "O(∩_∩)O哈哈~";
     }
 
+
     /**
-     * 模拟熔断超时
-     *
+     * 超时访问
+     * HystrixCommand:一旦调用服务方法失败并抛出了错误信息后,会自动调用@HystrixCommand标注好的fallbckMethod调用类中的指定方法
+     * execution.isolation.thread.timeoutInMilliseconds:线程超时时间3秒钟
      * @param id
      * @return
      */
+    @HystrixCommand(fallbackMethod = "payment_TimeOutHandler", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+    })
     public String paymentInfo_TimeOut(Integer id) {
-        int timeNumber = 3;
+        int timeNumber = 5;
         try {
             // 暂停5秒钟
             TimeUnit.SECONDS.sleep(timeNumber);
@@ -37,5 +44,13 @@ public class PaymentService {
         }
         return "线程池:" + Thread.currentThread().getName() + " paymentInfo_TimeOut,id:" + id + "\t" +
                 "O(∩_∩)O哈哈~  耗时(秒)" + timeNumber;
+    }
+    /**
+     * 兜底方案 payment_TimeOutHandler
+     * @param id
+     * @return
+     */
+    public String payment_TimeOutHandler(Integer id) {
+        return "线程池:" + Thread.currentThread().getName() + " 系统繁忙或运行错误,请稍后重试,id:" + id + "\t" + "o(╥﹏╥)o";
     }
 }
